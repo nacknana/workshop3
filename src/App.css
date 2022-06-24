@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Joan&display=swap');
+
+:root {
+  --main-primary: #7fb4d8;
+  --main-font-color :rgb(24, 77, 31);
+}
+
+
+*{
+  font-family: 'Joan', serif;
+  color: var(--main-font-color) !important;
+}
+
 .App {
   text-align: center;
 }

@@ -1,0 +1,42 @@
+.item-btn{
+    font-size: 20px;
+}
+
+.menu-navbar {
+     background-color: var(--main-primary)  !important; 
+     margin: 0;
+     padding: 0;
+     height: 100px;
+}
+.menu-navbar>.item>.dropdown{
+    /* background-color: red !important; */
+    width: 150px !important;
+}
+.menu-navbar>a,
+.menu-navbar div{
+    color: var(--main-font-color) !important;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.logo{
+    font-size: 40px;
+    
+}
+.logo :hover{
+    background-color: azure;
+}
+
+.d_flex {
+    display: flex;
+    align-items: baseline;
+
+}
+
+.item{
+    display: flexbox;
+}
+.drop-cate{
+    color: #fff;
+    background-color: #7fb4d8;
+}
