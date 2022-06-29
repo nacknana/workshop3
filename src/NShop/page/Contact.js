@@ -1,5 +1,5 @@
 import React from 'react'
-import Breadcrumb from '../item/Breadcrumb'
+import Breadcrumb from '../layout/Breadcrumb'
 
 export default function Contact() {
 

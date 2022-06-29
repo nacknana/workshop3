@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, Grid, Header, Message, Segment, Label } from 'semantic-ui-react'
-import { useNavigate } from "react-router-dom"
-import '../assets/Login.css'
+import { useNavigate, useLocation } from "react-router-dom"
 import axios from 'axios'
 
+import { SET_AUTH_ERROR_REQ, SET_AUTH_REQ } from '../saga/actionsType'
+
+import '../assets/Login.css'
+
 export default function Login() {
-    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [token, setToken] = useState([])
+    const navigate = useNavigate()
+    const location = useLocation()
+    const dispatch = useDispatch()
+
+    const action = (type, payload) => dispatch({ type, payload })
+
+    const { user, error } = useSelector(state => state.auth)
+
+    useEffect(() => {
+        // console.log(location.pathname);
+        if (user && location.pathname === '/login/') {
+            navigate('/')
+        }
+    }, [user])
+
+    useEffect(() => {
+        action(SET_AUTH_ERROR_REQ, null)
+    }, [])
+
+
 
     const handleChangUsername = (e, data) => {
         setUsername(data.value)
@@ -16,27 +38,29 @@ export default function Login() {
     const handleChangPassword = (e, data) => {
         setPassword(data.value)
     }
-    const handleLoginClicked = async () => {
-        const res = await axios.post('token/', {
+    const handleLoginClicked = () => {
+        axios.post('token/', {
             'username': username,
             'password': password
-        }).then((data) => {
-            console.log(data);
-            // setToken(res.data)
+        }).then(respond => {
+            action(SET_AUTH_REQ, respond.data);
+            alert('Login Success')
         }).catch((err) => {
-            console.log(err.response.data);
+            // console.log(err.response);
+            action(SET_AUTH_ERROR_REQ, err.response.data)
         })
 
-        // console.log(res.status);
-        // console.log(res.data);
-        // console.log(`username = ${username}  password = ${password}`);
+
+
+
     }
 
     return (
-        <div>
-            <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+        <div className='bg-white p-4 form-control' >
+
+            <Grid textAlign='center' verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
-                    <Header as='h2' textAlign='center'>
+                    <Header className='text-black' as='h2' textAlign='center' inverted>
                         {/* <Image src='/logo.png' />  */}
                         Log-in to your account
                     </Header>
@@ -47,7 +71,9 @@ export default function Login() {
                                 fluid
                                 icon='user'
                                 iconPosition='left'
-                                placeholder='Username' />
+                                placeholder='Username'
+                                required
+                            />
                             <Form.Input
                                 onChange={handleChangPassword}
                                 fluid
@@ -55,6 +81,8 @@ export default function Login() {
                                 iconPosition='left'
                                 placeholder='Password'
                                 type='password'
+                                required
+
                             />
 
                             <Button color='teal' fluid size='large' onClick={handleLoginClicked}>
@@ -62,6 +90,11 @@ export default function Login() {
                             </Button>
                         </Segment>
                     </Form>
+                    {error &&
+                        <Message error className="msg-login">
+                            {/* <Message.Header>{error.code}</Message.Header> */}
+                            <p>{error.msg}</p>
+                        </Message>}
                     <Message>
                         No account? <Label onClick={() => { return navigate('/register/') }} >Sign Up</Label>
                     </Message>

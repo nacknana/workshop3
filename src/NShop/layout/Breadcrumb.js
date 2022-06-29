@@ -4,16 +4,17 @@ import { useNavigate, Link } from "react-router-dom"
 import '../assets/Breadcrumbs.css'
 
 
-export default function Breadcrumbs({ paths }) {
+export default function Breadcrumbs({ paths, url }) {
 
     const navigate = useNavigate()
     return <div className='box-bread' >
         <Breadcrumb key={paths.length} >
+            <Breadcrumb.Section as={Link} to='/' link >
+                home
+            </Breadcrumb.Section>
             {paths.map((path, i) => {
                 return <span key={i}>
-                    <Breadcrumb.Section as={Link} to='/' link >
-                        home
-                    </Breadcrumb.Section>
+
                     <Breadcrumb.Divider icon='right chevron' />
                     {i < paths.length - 1 ?
                         <Breadcrumb.Section
@@ -21,14 +22,17 @@ export default function Breadcrumbs({ paths }) {
                             onClick={(e, data) => {
                                 console.log(data.children);
                                 if (data.link) {
-                                    navigate(`${data.children}/`)
+                                    if (url) {
+                                        navigate(`${url}`)
+                                    } else {
+                                        navigate(`/${data.children}/`)
+                                    }
+
                                 }
                             }}
                         >
                             {path}
                         </Breadcrumb.Section> :
-
-
                         <Breadcrumb.Section
                             active
                         >
