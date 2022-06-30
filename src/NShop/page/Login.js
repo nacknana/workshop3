@@ -56,7 +56,7 @@ export default function Login() {
     }
 
     return (
-        <div className='bg-white p-4 form-control' >
+        <div className='bg-white p-4 ' style={{ borderRadius: '10px' }} >
 
             <Grid textAlign='center' verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>

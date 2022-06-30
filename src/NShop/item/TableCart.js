@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { Table, Button } from 'semantic-ui-react'
+import { Table, Button, Icon } from 'semantic-ui-react'
 
 // const tableData = [
 //     { name: 'John', age: 15, gender: 'Male' },
@@ -100,7 +100,7 @@ function TableCart({ newData, user }) {
     }
 
     return (
-        <Table sortable celled selectable textAlign='center' className='fs-2 m-4'>
+        <Table sortable selectable textAlign='center' className='fs-2 m-4'>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell
@@ -136,39 +136,55 @@ function TableCart({ newData, user }) {
                 </Table.Row>
             </Table.Header>
             <Table.Body >
+
                 {data.map(({ id, product, quantity, total }) => (
-                    // console.log(product)
-                    <Table.Row key={id} >
-                        <Table.Cell verticalAlign='middle' >
+
+                    <Table.Row key={id}  >
+                        <Table.Cell verticalAlign='middle' disabled={!product.enable} >
+
                             <div>
 
                                 <img src={axios.getUri().concat(product.img.thumbnail)} alt={product.name} />
                                 <h3>{product.name}</h3>
                             </div>
+
                         </Table.Cell>
-                        <Table.Cell verticalAlign='middle'  >
+                        <Table.Cell verticalAlign='middle' disabled={!product.enable} >
                             <div className='font-num '>
                                 {product.price.toLocaleString('en-US', 2)}
                             </div>
                         </Table.Cell>
-                        <Table.Cell verticalAlign='middle'  >
-                            <div className='font-num '>
-                                <input className='text-center' defaultValue={quantity} id={id} onChange={updateCount} type='number' max={10} min={1} />
-                            </div>
+                        <Table.Cell verticalAlign='middle' >
+                            {product.enable ?
+                                <div className='font-num '>
+                                    <input className='text-center' defaultValue={quantity} id={id} onChange={updateCount} type='number' max={10} min={1} />
+                                </div>
+                                :
+                                <div className='text-danger'>
+                                    ไม่มีสินค้า
+                                </div>
+                            }
                         </Table.Cell>
-                        <Table.Cell verticalAlign='middle'>
+                        <Table.Cell verticalAlign='middle' disabled={!product.enable}>
                             <div className='font-num '>
                                 {/* {console.log(getQuantity(id))} */}
                                 {(total).toLocaleString('en-US', 2)}
                             </div>
                         </Table.Cell>
-                        <Table.Cell verticalAlign='middle' >
+                        {product.enable ? <Table.Cell verticalAlign='middle' >
+
                             <Button.Group >
                                 <Button content='Update' color='green' icon='save outline' user={user} id={id} onClick={updateCart} />
                                 <Button content='Delete' color='youtube' icon='remove' user={user} id={id} product={product} onClick={deleteCart} />
                             </Button.Group>
+
+                        </Table.Cell> : <Table.Cell verticalAlign='middle'>
+                            <Button content='Delete' color='youtube' icon='remove' user={user} id={id} product={product} onClick={deleteCart} />
                         </Table.Cell>
+                        }
+
                     </Table.Row>
+
                 ))}
 
             </Table.Body>
@@ -180,10 +196,12 @@ function TableCart({ newData, user }) {
                                 Total
                             </div>
                             <div className=' w-50'>
-                                <div className=' form-control border-success fs-1 font-num'>
+                                <div className='form-control border-success fs-1 font-num'>
+                                    <Icon name='btc' color='green' />
                                     {
-                                        data.map(d => d.total).reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', 2)
+                                        data.map(d => d.product.enable && d.total).reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', 2).concat('.00')
                                     }
+                                    {/* <span style={{ marginLeft: '20px' }}>Baht</span> */}
                                 </div>
                                 <div className='container btn btn-primary fs-1 mt-3'>
                                     Confirm

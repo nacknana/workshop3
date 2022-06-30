@@ -1,12 +1,8 @@
 .form .button{
     background-color: var(--main-primary) !important;
+    color: white !important;
 }
 
 .message>.label {
     cursor: pointer;
-}
-
-
-.form .button{
-    color: white !important;
 }

@@ -6,6 +6,7 @@ import TableCart from '../item/TableCart'
 import Breadcrumbs from '../layout/Breadcrumb'
 
 export default function Cart() {
+    document.title = 'cart'
     const navigate = useNavigate()
     const { user } = useSelector(state => state.auth)
 

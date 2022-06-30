@@ -18,6 +18,7 @@ function Navbar() {
   const [selectCat, setSelectCat] = useState(0)
   const [stateLogout, setStateLogout] = useState(false)
   const [countCart, setCountCart] = useState(0)
+  const [search, setSearch] = useState('')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -28,7 +29,11 @@ function Navbar() {
     }
   }, [])
 
-
+  useEffect(() => {
+    if (user) {
+      getCart()
+    }
+  }, [user])
 
 
   useEffect(() => {
@@ -108,6 +113,14 @@ function Navbar() {
     setStateLogout(false)
   }
 
+  const clickSearch = () => {
+    setSearch('')
+    navigate(`/?search=${search}`)
+  }
+  const searchChang = (e, data) => {
+    setSearch(data.value)
+  }
+
 
   return (
     <div >
@@ -116,9 +129,11 @@ function Navbar() {
         stackable
         // vertical
         tabular='right'
+        fluid
         className='menu-navbar'
-        attached='top'>
-        <Container fluid>
+      // attached='top'
+      >
+        <Container className=''>
           <Menu.Item as={Link} to="/" onClick={() => { setPage('home'); setSelectCat(0) }} >
             <span className='logo'>NShop</span>
           </Menu.Item>
@@ -129,12 +144,13 @@ function Navbar() {
           />
           <Menu.Item active={page === "category"} >
             <Dropdown
+              className='d-flex'
               // as={'dropdown'}
 
-              loading={cateLoading}
-              fluid
-              inline
-              item
+              // loading={cateLoading}
+              // fluid
+              // inline
+              // item
               options={category}
               onChange={dropCateChang}
               value={selectCat} />
@@ -149,21 +165,29 @@ function Navbar() {
             name='About'
             onClick={handleItemClick}
           />
+        </Container>
+        <Container>
           <Menu.Menu
-            position='right'>
+            position='right'
+          >
+
             <Menu.Item >
               <Input
                 disabled={['home', 'category'].findIndex((value) => value === page) === -1 ? true : false}
-                icon='search' placeholder='Search...' />
+                onChange={searchChang} value={search}
+                icon={<Icon name='search' inverted circular link onClick={clickSearch} />}
+                placeholder='Search...'
+
+              />
             </Menu.Item>
             {user ?
 
-              <Menu.Item className='d-flex justify-content-center'>
+              <Menu.Item className='d-flex justify-content-center '>
                 <Button animated as={Link} to={'/cart/'}>
                   <Button.Content hidden>
                     Cart</Button.Content>
                   <Button.Content visible>
-                    <Icon name='shop' /><span className="font-num position-absolute top-0 start-100 translate-middle badge rounded-pill text-black">{countCart}</span>
+                    <Icon name='shop' /><span className="font-num position-absolute top-0 start-100 translate-middle badge rounded-pill text-danger bg-white ">{countCart}</span>
                   </Button.Content>
 
                 </Button>
@@ -190,30 +214,31 @@ function Navbar() {
 
               </Menu.Item>}
           </Menu.Menu>
+          <Dimmer
+            page
+            active={stateLogout}
+            onClickOutside={() => {
+
+              console.log('Clicck');
+              setStateLogout(false)
+            }}
+          >
+            <Header as='h2' size='huge' icon inverted color='red'>
+              <Container>
+                <Header icon inverted>
+                  <Icon name='log out' />
+                  Do you want to Log out?
+                </Header>
+                <Button.Group size='huge'>
+                  <Button onClick={logouot} color='youtube' >Logout</Button>
+                  <Button onClick={() => { setStateLogout(false) }}>Cancle</Button>
+                </Button.Group>
+              </Container>
+            </Header>
+          </Dimmer>
         </Container>
       </Menu>
-      <Dimmer
-        page
-        active={stateLogout}
-        onClickOutside={() => {
 
-          console.log('Clicck');
-          setStateLogout(false)
-        }}
-      >
-        <Header as='h2' size='huge' icon inverted color='red'>
-          <Container>
-            <Header icon inverted>
-              <Icon name='log out' />
-              Do you want to Log out?
-            </Header>
-            <Button.Group size='huge'>
-              <Button onClick={logouot} color='youtube' >Logout</Button>
-              <Button onClick={() => { setStateLogout(false) }}>Cancle</Button>
-            </Button.Group>
-          </Container>
-        </Header>
-      </Dimmer>
 
     </div>
   )
